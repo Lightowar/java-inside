@@ -4,7 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class SwitchExampleTest {
+class SwitchExampleTest {
+	
     @Test
     void dog() {
         assertEquals(1, SwitchExample.switchExample("dog"));
@@ -31,6 +32,6 @@ public class SwitchExampleTest {
     
     @Test
     void other2() {
-        assertEquals(4, SwitchExample.switchExample2("frog"));
+        assertEquals(4, SwitchExample.switchExample2("mouse"));
     }
 }
