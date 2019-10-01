@@ -1,4 +1,4 @@
-package fr.umlv.javainside.lab1;
+package fr.umlv.javainside.lab2;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JSONProperty {
+	String value() default "";
 }
