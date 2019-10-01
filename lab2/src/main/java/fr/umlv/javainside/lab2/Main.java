@@ -1,6 +1,10 @@
 package fr.umlv.javainside.lab2;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Arrays;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -20,8 +24,23 @@ public class Main {
 	}
 
 	public static String toJSON(Object object) {
-		return Arrays.stream(object.getClass().getMethods()).map(m -> m.getName()).filter(s -> s.startsWith("get"))
-				.map(s -> propertyName(s)).collect(Collectors.joining("; "));
+		return Arrays.stream(object.getClass().getMethods()).filter(s -> s.getName().startsWith("get"))
+				.map(m -> getterToString(m, object)).collect(Collectors.joining("\n", "{\n", "\n}\n"));
+	}
+
+	private static String getterToString(Method method, Object object) {
+		try {
+			return "  \"" + propertyName(method.getName()) + "\": \"" + method.invoke(object) + "\"";
+		} catch (IllegalAccessException e) {
+			throw new IllegalStateException(e);
+		} catch (InvocationTargetException e) {
+			var cause = e.getCause();
+			if (cause instanceof RuntimeException)
+				throw (RuntimeException) cause;
+			if (cause instanceof Error)
+				throw (Error) cause;
+			throw new UndeclaredThrowableException(e);
+		}
 	}
 
 	public static void main(String[] args) {
@@ -29,7 +48,7 @@ public class Main {
 		System.out.println(toJSON(person));
 		var alien = new Alien("E.T.", 100);
 		System.out.println(toJSON(alien));
-		
-		System.out.println(toJSON((Object)alien));
+
+		System.out.println(toJSON((Object) alien));
 	}
 }
