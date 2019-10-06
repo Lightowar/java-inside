@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Json {
@@ -17,10 +18,32 @@ public class Json {
 		}
 	};
 
-	public static String toJSON(Object object) {
+	private static ClassValue<Function<Object, String>> classvalue2 = new ClassValue<Function<Object, String>>() {
+
+		@Override
+		protected Function<Object, String> computeValue(Class<?> type) {
+			var methods = Arrays.stream(type.getMethods()).filter(m -> m.getName().startsWith("get"))
+					.filter(m -> m.isAnnotationPresent(JSONProperty.class))
+					.sorted(Comparator.comparing(Method::getName)).collect(Collectors.toList());
+			return object -> methods.stream().map(m -> getterToString(m, object))
+					.collect(Collectors.joining("\n", "{\n", "\n}\n"));
+		}
+	};
+
+	public static String toJSONOlder(Object object) {
+		return Arrays.stream(object.getClass().getMethods()).filter(m -> m.getName().startsWith("get"))
+				.filter(m -> m.isAnnotationPresent(JSONProperty.class)).sorted(Comparator.comparing(Method::getName))
+				.map(m -> getterToString(m, object)).collect(Collectors.joining("\n", "{\n", "\n}\n"));
+	}
+
+	public static String toJSONOld(Object object) {
 		return Arrays.stream(classvalue.get(object.getClass())).filter(m -> m.getName().startsWith("get"))
 				.filter(m -> m.isAnnotationPresent(JSONProperty.class)).sorted(Comparator.comparing(Method::getName))
 				.map(m -> getterToString(m, object)).collect(Collectors.joining("\n", "{\n", "\n}\n"));
+	}
+
+	public static String toJSON(Object object) {
+		return classvalue2.get(object.getClass()).apply(object);
 	}
 
 	private static String propertyName(String name) {

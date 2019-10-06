@@ -6,4 +6,10 @@ jdk: openjdk13
 
 script:
   - cd lab1
-  - mvn package	
+  - mvn package
+  - cd ../lab1
+  - mvn package
+  
+os:
+  - linux
+  - osx

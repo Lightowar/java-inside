@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 public class JsonTest {
 
-	public static class Alien {
+	private static class Alien {
 		private final String planet;
 		private final int age;
 
@@ -32,7 +32,7 @@ public class JsonTest {
 		}
 	}
 
-	public static class Person {
+	private static class Person {
 		private final String firstName;
 		private final String lastName;
 
@@ -52,15 +52,9 @@ public class JsonTest {
 		}
 	}
 
-	private static class Error1 {
+	public static class Error {
 
-		public int getNumber() {
-			return 0;
-		}
-	}
-
-	public static class Error2 {
-
+		@JSONProperty
 		public int getNumber() {
 			return 1 / 0;
 		}
@@ -79,7 +73,10 @@ public class JsonTest {
 	@Test
 	void person() {
 		var person = new Person("John", "Doe");
-		assertEquals(toJSON(person), Json.toJSON(person));
+		var json = toJSON(person);
+		assertEquals(json, Json.toJSONOlder(person));
+		assertEquals(json, Json.toJSONOld(person));
+		assertEquals(json, Json.toJSON(person));
 	}
 
 	@Test
@@ -88,12 +85,12 @@ public class JsonTest {
 		assertEquals(toJSON(alien), Json.toJSON(alien));
 	}
 
-	/*
-	 * @Test void shouldGetIllegalStateExceptionOnPrivateClass() { var error = new
-	 * Error1(); assertThrows(IllegalStateException.class, () ->
-	 * Json.toJSON(error)); }
-	 * 
-	 * @Test void shouldGetIllegalStateExceptionOnTODO() { var error = new Error2();
-	 * assertThrows(Exception.class, () -> { Json.toJSON(error); }); }
-	 */
+	@Test
+	void shouldGetArithmeticExceptionOnError() {
+		var error = new Error();
+		assertThrows(ArithmeticException.class, () -> {
+			Json.toJSON(error);
+		});
+	}
+
 }
