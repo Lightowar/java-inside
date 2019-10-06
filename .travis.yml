@@ -7,7 +7,7 @@ jdk: openjdk13
 script:
   - cd lab1
   - mvn package
-  - cd ../lab1
+  - cd ../lab2
   - mvn package
   
 os:
