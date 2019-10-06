@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Json {
 
@@ -22,23 +23,24 @@ public class Json {
 
 		@Override
 		protected Function<Object, String> computeValue(Class<?> type) {
-			var methods = Arrays.stream(type.getMethods()).filter(m -> m.getName().startsWith("get"))
-					.filter(m -> m.isAnnotationPresent(JSONProperty.class))
-					.sorted(Comparator.comparing(Method::getName)).collect(Collectors.toList());
+			var methods = FiltreAndSorteMethodStream(Arrays.stream(type.getMethods())).collect(Collectors.toList());
 			return object -> methods.stream().map(m -> getterToString(m, object))
 					.collect(Collectors.joining("\n", "{\n", "\n}\n"));
 		}
 	};
 
+	private static Stream<Method> FiltreAndSorteMethodStream(Stream<Method> methodsStream) {
+		return methodsStream.filter(m -> m.getName().startsWith("get") && m.isAnnotationPresent(JSONProperty.class))
+				.sorted(Comparator.comparing(Method::getName));
+	}
+
 	public static String toJSONOlder(Object object) {
-		return Arrays.stream(object.getClass().getMethods()).filter(m -> m.getName().startsWith("get"))
-				.filter(m -> m.isAnnotationPresent(JSONProperty.class)).sorted(Comparator.comparing(Method::getName))
+		return FiltreAndSorteMethodStream(Arrays.stream(object.getClass().getMethods()))
 				.map(m -> getterToString(m, object)).collect(Collectors.joining("\n", "{\n", "\n}\n"));
 	}
 
 	public static String toJSONOld(Object object) {
-		return Arrays.stream(classvalue.get(object.getClass())).filter(m -> m.getName().startsWith("get"))
-				.filter(m -> m.isAnnotationPresent(JSONProperty.class)).sorted(Comparator.comparing(Method::getName))
+		return FiltreAndSorteMethodStream(Arrays.stream(classvalue.get(object.getClass())))
 				.map(m -> getterToString(m, object)).collect(Collectors.joining("\n", "{\n", "\n}\n"));
 	}
 
