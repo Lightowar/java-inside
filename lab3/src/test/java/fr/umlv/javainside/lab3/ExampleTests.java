@@ -78,23 +78,10 @@ public class ExampleTests {
 
 		var m0 = insertArguments(
 				publicLookup().findVirtual(String.class, "equals", methodType(boolean.class, Object.class)), 1, "foo");
-		var m1 = dropArguments(MethodHandles.constant(int.class, 1).asType(methodType(int.class, Object.class)), 2);
-		var m2 = dropArguments(MethodHandles.constant(int.class, -1).asType(methodType(int.class, Object.class)), 2);
-
-		System.out.println(guardWithTest(m0, m1, m2).invokeExact("foo"));
-
-		/*
-		 * assertEquals( (int) guardWithTest(
-		 * insertArguments(publicLookup().findVirtual(String.class, "equals",
-		 * methodType(boolean.class, Object.class)), 1, "foo"),
-		 * MethodHandles.constant(int.class, -1), MethodHandles.constant(int.class,
-		 * 1)).invokeExact("foo"), 1);
-		 * 
-		 * assertEquals( (int) guardWithTest(
-		 * insertArguments(publicLookup().findVirtual(String.class, "equals",
-		 * methodType(boolean.class, Object.class)), 1, "foo"),
-		 * MethodHandles.constant(int.class, -1), MethodHandles.constant(int.class, -1))
-		 * .invokeExact("bar"), -1);
-		 */
+		var m1 = dropArguments(MethodHandles.constant(Object.class, 1), 0, String.class);
+		var m2 = dropArguments(MethodHandles.constant(Object.class, -1), 0, String.class);
+		
+		assertEquals(guardWithTest(m0, m1, m2).invokeExact("foo"), 1);
+		assertEquals(guardWithTest(m0, m1, m2).invokeExact("bar"), -1);
 	}
 }
