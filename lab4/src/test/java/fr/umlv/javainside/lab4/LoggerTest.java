@@ -10,7 +10,9 @@ public class LoggerTest {
 
 	@Test
 	void testLog() {
-		A.LOGGER.log("foo");
+		A.reset();
+		var logger = Logger.of(A.class, A.SB::append);
+		logger.log("foo");
 		assertEquals(A.SB.toString(), "foo");
 	}
 
@@ -22,7 +24,38 @@ public class LoggerTest {
 
 	@Test
 	void logNull() {
-		var logger = A.LOGGER;
+		var logger = Logger.of(A.class, A.SB::append);
 		assertThrows(NullPointerException.class, () -> logger.log(null));
+	}
+
+	@Test
+	void testFastLog() {
+		A.reset();
+		var logger = Logger.of(A.class, A.SB::append);
+		logger.log("foo");
+		assertEquals(A.SB.toString(), "foo");
+	}
+
+	@Test
+	void testFastNull() {
+		assertAll(() -> assertThrows(NullPointerException.class, () -> Logger.of(null, __ -> {
+		})), () -> assertThrows(NullPointerException.class, () -> Logger.of(LoggerTest.class, null)));
+	}
+
+	@Test
+	void fastLogNull() {
+		var logger = Logger.of(A.class, A.SB::append);
+		assertThrows(NullPointerException.class, () -> logger.log(null));
+	}
+
+	@Test
+	void testDisabled() {
+		A.reset();
+		var logger = Logger.of(A.class, A.SB::append);
+		logger.log("bar");
+		Logger.enable(A.class, false);
+		logger.log("foo");
+		Logger.enable(A.class, true);
+		assertEquals(A.SB.toString(), "bar");
 	}
 }

@@ -10,8 +10,8 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Warmup;   
-    
+import org.openjdk.jmh.annotations.Warmup;
+
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(3)
@@ -19,13 +19,20 @@ import org.openjdk.jmh.annotations.Warmup;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Benchmark)
 public class LoggerBenchMark {
-  @Benchmark
-  public void no_op() {
-    // empty
-  }
-  
-  @Benchmark
-  public void simple_logger() {
-	  A.LOGGER.log("test");
-  }
+	@Benchmark
+	public void no_op() {
+		// empty
+	}
+
+	@Benchmark
+	public void simple_logger() {
+		var logger = Logger.of(B.class, s -> {});
+		logger.log("test");
+	}
+
+	@Benchmark
+	public void fast_logger() {
+		var logger = Logger.fastOf(B.class, s -> {});
+		logger.log("test");
+	}
 }
