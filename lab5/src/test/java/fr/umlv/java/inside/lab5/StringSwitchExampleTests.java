@@ -3,9 +3,6 @@ package fr.umlv.java.inside.lab5;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 
@@ -24,7 +21,6 @@ public class StringSwitchExampleTests {
 	}
 
 	private static Stream<ToIntFunction<String>> allFunct() {
-		List<ToIntFunction<String>> lst = Arrays.asList(s -> stringSwitch(s), s -> stringSwitch2(s));
-		return lst.stream();
+		return Stream.of(s -> stringSwitch(s), s -> stringSwitch2(s));
 	}
 }
