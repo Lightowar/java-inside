@@ -2,19 +2,20 @@ package fr.umlv.java.inside.lab5;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+
+import static fr.umlv.java.inside.lab5.StringSwitchExample.*;
 
 public class StringSwitchExampleTests {
 
 	@Test
-	void testStringSwitch() {
+	public void testStringSwitch() {
 		assertAll(
-				()->assertEquals(stringSwitch("foo"), 0),
-				()->assertEquals(stringSwitch("bar"), 1),
-				()->assertEquals(stringSwitch("bazz"), 2),
-				()->assertEquals(stringSwitch("fooz"), -1)
+				()->assertEquals(0, stringSwitch("foo")),
+				()->assertEquals(1, stringSwitch("bar")),
+				()->assertEquals(2, stringSwitch("bazz")),
+				()->assertEquals(-1, stringSwitch("fooz"))
 		);
 	}
 }
