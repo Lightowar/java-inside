@@ -30,10 +30,10 @@ public class StringSwitchBenchMark {
 		for (var i = 0; i < 166_666; i++) {
 			f.applyAsInt("foo");
 			f.applyAsInt("bar");
-			f.applyAsInt("bazz");
+			f.applyAsInt("baz");
 			f.applyAsInt("boo");
 			f.applyAsInt("far");
-			f.applyAsInt("fazz");
+			f.applyAsInt("faz");
 		}
 	}
 
