@@ -27,7 +27,7 @@ public class LoggerBenchMark {
 	@Benchmark
 	public void simple_logger() {
 		var logger = Logger.of(B.class, s -> {});
-		logger.log("test");
+		logger.log("test"); 
 	}
 
 	@Benchmark

@@ -77,6 +77,8 @@ public interface Logger {
 	};
 
 	public static void enable(Class<?> declaringClass, boolean enable) {
-		ENABLE_CALLSITES.get(declaringClass).setTarget(MethodHandles.constant(boolean.class, enable));
+		var callSite = ENABLE_CALLSITES.get(declaringClass);
+		callSite.setTarget(MethodHandles.constant(boolean.class, enable));
+		MutableCallSite.syncAll(new MutableCallSite[] { callSite });
 	}
 }
