@@ -21,6 +21,6 @@ public class StringSwitchExampleTests {
 	}
 
 	private static Stream<ToIntFunction<String>> allFunct() {
-		return Stream.of(s -> stringSwitch(s), s -> stringSwitch2(s));
+		return Stream.of(s -> stringSwitch(s), s -> stringSwitch2(s), s -> stringSwitch3(s));
 	}
 }
