@@ -11,7 +11,7 @@ import static java.lang.invoke.MethodType.methodType;
 
 public class StringSwitchExample {
 
-	private static final MethodHandle MH, MH3;
+	private static final MethodHandle MH2, MH3;
 
 	private static final MethodHandle STRING_EQUAL;
 
@@ -21,7 +21,7 @@ public class StringSwitchExample {
 		} catch (NoSuchMethodException | IllegalAccessException e) {
 			throw new AssertionError();
 		}
-		MH = createMHFromStrings2("foo", "bar", "bazz");
+		MH2 = createMHFromStrings2("foo", "bar", "bazz");
 		MH3 = createMHFromStrings3("foo", "bar", "bazz");
 	}
 
@@ -40,7 +40,7 @@ public class StringSwitchExample {
 
 	public static int stringSwitch2(String s) {
 		try {
-			return (int) MH.invokeExact(s);
+			return (int) MH2.invokeExact(s);
 		} catch (RuntimeException | Error e) {
 			throw e;
 		} catch (Throwable e) {
@@ -94,8 +94,6 @@ public class StringSwitchExample {
 		@SuppressWarnings("unused")
 		private int slowPath(String value) {
 			var ret = matches.indexOf(value);
-			if (ret == -1)
-				return ret;
 			setTarget(guardWithTest(insertArguments(STRING_EQUAL, 1, value),
 					dropArguments(constant(int.class, ret), 0, String.class), getTarget()));
 			return ret;
